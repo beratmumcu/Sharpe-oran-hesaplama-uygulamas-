@@ -1,55 +1,57 @@
-# Prerequisites
-*.d
+#include <stdio.h>
+#include <stdlib.h> // system("pause") fonksiyonu için
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+int main() {
+    // Gerekli değişkenleri double olarak tanımlıyoruz çünkü ondalıklı sayılarla çalışacağız.
+    double portfoyGetirisi, risksizFaizOrani, standartSapma;
+    double sharpeOrani;
 
-# Linker output
-*.ilk
-*.map
-*.exp
+    // Kullanıcıya program hakkında bilgi ver
+    printf("--- Sharpe Orani Hesaplama Programi ---\n\n");
+    printf("Bu program, girdiginiz degerlere gore bir yatirimin risk-getiri performansini\n");
+    printf("hesaplayan Sharpe Orani'ni bulur.\n\n");
 
-# Precompiled Headers
-*.gch
-*.pch
+    // Kullanıcıdan gerekli değerleri al
+    // Not: Değerleri yüzde olarak girmesini istiyoruz (Örn: %8 için 8 giriniz)
+    printf("Lutfen portfoyun yillik beklenen getiri oranini yuzde olarak giriniz (orn: 8.5): ");
+    scanf("%lf", &portfoyGetirisi);
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+    printf("Lutfen yillik risksiz faiz oranini yuzde olarak giriniz (orn: 2.1): ");
+    scanf("%lf", &risksizFaizOrani);
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+    printf("Lutfen portfoy getirisinin yillik standart sapmasini (volatilite) yuzde olarak giriniz (orn: 15.0): ");
+    scanf("%lf", &standartSapma);
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+    // Yüzde olarak alınan değerleri ondalık formata çevir (örn: 8.5 -> 0.085)	
+    portfoyGetirisi = portfoyGetirisi / 100.0;
+    risksizFaizOrani = risksizFaizOrani / 100.0;
+    standartSapma = standartSapma / 100.0;
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+    // Hesaplama
+    // Standart sapmanın 0 olup olmadığını kontrol et (sıfıra bölme hatasını önlemek için)
+    if (standartSapma == 0) {
+        printf("\n\nHATA: Standart sapma 0 olamaz. Bu durumda Sharpe Orani hesaplanamaz (sonsuz cikar).\n");
+    } else {
+        // Sharpe Oranı formülünü uygula
+        sharpeOrani = (portfoyGetirisi - risksizFaizOrani) / standartSapma;
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+        // Sonucu ekrana yazdır
+        printf("\n----------------------------------------\n");
+        printf("Hesaplanan Sharpe Orani: %.4f\n", sharpeOrani); // Sonucu 4 ondalık basamakla göster
+        printf("----------------------------------------\n\n");
 
-# debug information files
-*.dwo
+        // Sonucun yorumlanması
+        printf("Yorum:\n");
+        printf("- 1'in altindaki oranlar genellikle 'kotu' kabul edilir.\n");
+        printf("- 1 ile 1.99 arasi 'iyi' olarak kabul edilir.\n");
+        printf("- 2 ile 2.99 arasi 'cok iyi' olarak kabul edilir.\n");
+        printf("- 3 ve uzeri oranlar 'mukemmel' olarak kabul edilir.\n");
+    }
+
+    // Dev-C++'da konsolun hemen kapanmasını engellemek için
+    printf("\nCikmak icin bir tusa basin...");
+    fflush(stdin); // Önbelleği temizle
+    getchar();     // Kullanıcının bir tuşa basmasını bekle (alternatif system("pause"))
+
+    return 0;
+}
